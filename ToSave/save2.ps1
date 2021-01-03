@@ -1,7 +1,15 @@
 ﻿$src = "F:\"
 $dst = "D:\USB"
 $file_updates = "F:\Developpement\Powershell\MakesLifeEasier\ToSave\update.txt"
-$last_update = Get-Content $file_updates
+
+if (test-Path $file_updates) 
+{
+    $last_update = Get-Content $file_updates
+}
+else
+{
+    $last_update = (Get-Date).AddDays(-1)
+}
 
 $nb_copy = 0
 $nb_new_folder = 0
