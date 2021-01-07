@@ -59,7 +59,7 @@ function Get-FolderPath
     #>
 }
 
-function CompareSrcDst 
+function Compare-SrcDst 
 {
     param(
         $SrcFiles,
@@ -68,8 +68,8 @@ function CompareSrcDst
 
     $files = $null
 
-    if ($SrcFiles.Count -gt 0 -and $DstFiles.Count -gt 0) {
-
+    if ($SrcFiles.Count -gt 0 -and $DstFiles.Count -gt 0) 
+    {
         ## <= In $src but differents in $save
         ## => In $save but differents in $sr
         $files = Compare-Object -ReferenceObject $SrcFiles -DifferenceObject $DstFiles -Property FullName, SideIndicator, LastWriteTime
@@ -95,7 +95,7 @@ function CompareSrcDst
     #>
 }
 
-function BuildPath 
+function Get-BuildPath 
 {
     param(
         $File,
@@ -126,20 +126,23 @@ function BuildPath
     #>
 }
 
-function UpdateDifferences 
+function Update-Differences 
 {
     param(
         $Differences
     )
 
-    foreach($Diff in $Differences) {
-
+    foreach($Diff in $Differences) 
+    {
         if ($Diff.SideIndicator -eq "<=")
         {
-            $CheckExistence = BuildPath $Diff $global:Location $global:SaveLocation
-        
-            if (-Not(Test-Path($CheckExistence))) {
-                
+            ## Check if a file in source location is in destination location
+            $CheckExistence = Get-BuildPath $Diff $global:Location $global:SaveLocation
+
+            ## If file is not in destination location
+            if (-Not(Test-Path($CheckExistence))) 
+            {
+                ## Build a folder path with item folder
                 $DstFolder = Get-FolderPath $Diff   
 
                 ## If folder doesn't exist, create it
@@ -149,22 +152,26 @@ function UpdateDifferences
                     Write-Host "Created folder : $DstFolder" -ForegroundColor Green
                 }
 
+                ## Build destination file path
                 $FileDst = $global:SaveLocation + ($Diff.FullName).Substring($global:Location.Length, ($Diff.FullName).Length - $global:Location.Length) 
+                
                 Copy-Item $Diff.FullName -Destination $FileDst 
                 Write-Host "Copied file : $($Diff.FullName)" -ForegroundColor Green
             }
         } 
         else
         {
-            $CheckExistence = BuildPath $Diff $global:SaveLocation $global:Location
-        
-            if (-Not(Test-Path($CheckExistence))) {
-                
-                if (Test-Path($Diff.FullName)) {
-                    Remove-Item $Diff.FullName
+            ## Build a path to check in source location
+            $CheckExistence = Get-BuildPath $Diff $global:SaveLocation $global:Location
+            
+            ## If item is not in source location
+            if (-Not(Test-Path($CheckExistence))) 
+            {
+                if (Test-Path($Diff.FullName)) 
+                {
+                    Remove-Item $Diff.FullName -Recurse -Force
+                    Write-Host "Deleted : $($Diff.FullName)" -ForegroundColor Red
                 }
-                
-                Write-Host "Deleted : $($Diff.FullName)" -ForegroundColor Red
             }  
         } 
     }
@@ -181,7 +188,7 @@ function UpdateDifferences
     #>
 }
 
-function UpdateIfNeed 
+function Update-IfNeed 
 {
     param(
         $Src,
@@ -192,6 +199,7 @@ function UpdateIfNeed
 
     foreach($File in $Files)
     {
+        ## Build a folder path with file path
         $DstFolder = Get-FolderPath $File             
 
         ## If folder doesn't exist, create it
@@ -201,6 +209,7 @@ function UpdateIfNeed
             Write-Host "Created folder : $DstFolder" -ForegroundColor Green
         }
 
+        ## Build a file path to destination location
         $FileDst = $global:SaveLocation + ($File.FullName).Substring($global:Location.Length, ($File.FullName).Length - $global:Location.Length) 
         Copy-Item $File.FullName -Destination $FileDst 
         Write-Host "Copied file : $FileDst" -ForegroundColor Green
@@ -225,8 +234,8 @@ function UpdateIfNeed
 
 $global:Location = "F:\"
 $global:SaveLocation = "D:\USB\"
-$Src = "F:\Developpement\Powershell"
-$Dst = "D:\USB\Developpement\Powershell"
+$Src = "F:\Developpement\"
+$Dst = "D:\USB\Developpement\"
 
 ## Get files in src
 $SrcFiles = Get-Files $Src
@@ -234,12 +243,13 @@ $SrcFiles = Get-Files $Src
 ## Get files in dest
 $DstFiles = Get-Files $Dst
 
+## If there is no items in destination location
 if ($DstFiles.Count -eq 0) 
 {
-    UpdateIfNeed $Src $Dst
+    Update-IfNeed $Src $Dst
 } 
 else 
 {
-    $Differences = CompareSrcDst $SrcFiles $DstFiles
-    UpdateDifferences $Differences
+    $Differences = Compare-SrcDst $SrcFiles $DstFiles
+    Update-Differences $Differences
 }

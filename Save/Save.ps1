@@ -43,7 +43,7 @@ function Get-FolderPath
     #>
 }
 
-function UpdateFiles 
+function Update-Files 
 {
     param(
         $ToUpdate,
@@ -132,4 +132,4 @@ Set-Content -Path $FilesUpdates -Value (Get-Date).ToString("MM/dd/yyyy HH:mm:ss"
 ## Get all files where the modification date is greater than the last date in update.txt
 $UpdatedFiles = Get-ChildItem -Path $Src -Recurse | Where-Object { $_.LastWriteTime -gt $LastUpdate -and $_.Mode -notlike "d*"}
 
-UpdateFiles $UpdatedFiles $Src $Dst
+Update-Files $UpdatedFiles $Src $Dst
