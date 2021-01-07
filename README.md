@@ -1,2 +1,2 @@
 # MakesLifeEasier
-Script to help me in my daily life
+Scripts to help me in my daily life.
