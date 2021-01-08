@@ -4,7 +4,7 @@
 
     .DESCRIPTION
     Compare folders, files and update source and destination.
-    The comparison is carried out with the tree structure.
+    The comparison is carried out with the tree structure and the last write time.
     
 #>
 
@@ -139,8 +139,14 @@ function Update-Differences
             ## Check if a file in source location is in destination location
             $CheckExistence = Get-BuildPath $Diff $global:Location $global:SaveLocation
 
+            $WorkFile = Get-Item -Path $Diff.FullName
+            
+            if (Test-Path($CheckExistence)) {
+                $SaveFile = Get-Item -Path $CheckExistence
+            }
+            
             ## If file is not in destination location
-            if (-Not(Test-Path($CheckExistence))) 
+            if (-Not(Test-Path($CheckExistence)) -or ($WorkFile.LastWriteTime -gt $SaveFile.LastAccessTime)) 
             {
                 ## Build a folder path with item folder
                 $DstFolder = Get-FolderPath $Diff   
@@ -234,8 +240,8 @@ function Update-IfNeed
 
 $global:Location = "F:\"
 $global:SaveLocation = "D:\USB\"
-$Src = "F:\Developpement\"
-$Dst = "D:\USB\Developpement\"
+$Src = "F:\Developpement\Powershell"
+$Dst = "D:\USB\Developpement\Powershell\"
 
 ## Get files in src
 $SrcFiles = Get-Files $Src
