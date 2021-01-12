@@ -238,24 +238,37 @@ function Update-IfNeed
     #>
 } 
 
-$global:Location = "F:\"
-$global:SaveLocation = "D:\USB\"
-$Src = "F:\Developpement\Powershell"
-$Dst = "D:\USB\Developpement\Powershell\"
+# Check if args are correct
+if ($args.Count -eq 2) {
 
-## Get files in src
-$SrcFiles = Get-Files $Src
+	$global:Location = "F:\"
+	$global:SaveLocation = "D:\USB\"
+	$Src = "F:\Developpement\$($args[0])"
+	$Dst = "D:\USB\Developpement\$($args[1])"
 
-## Get files in dest
-$DstFiles = Get-Files $Dst
+    ## Check if args are corrects
+	if ((Test-Path($Src)) -and (Test-Path($Dst)))
+	{
 
-## If there is no items in destination location
-if ($DstFiles.Count -eq 0) 
-{
-    Update-IfNeed $Src $Dst
+		## Get files in src
+		$SrcFiles = Get-Files $Src
+
+		## Get files in dest
+		$DstFiles = Get-Files $Dst
+
+		## If there is no items in destination location
+		if ($DstFiles.Count -eq 0) 
+		{
+    			Update-IfNeed $Src $Dst
+		} 
+		else 
+		{
+    			$Differences = Compare-SrcDst $SrcFiles $DstFiles
+    			Update-Differences $Differences
+		}
+	}
 } 
 else 
 {
-    $Differences = Compare-SrcDst $SrcFiles $DstFiles
-    Update-Differences $Differences
+	Write-Host "To execute this script, 2 arguments are required, folder source and folder destination" -ForegroundColor Red
 }
