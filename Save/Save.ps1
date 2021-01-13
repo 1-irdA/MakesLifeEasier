@@ -1,4 +1,6 @@
-﻿<#
+﻿#region Functions
+
+<#
     .Synopsis
     Detecte last modified files and copy them at the specified destination.
 
@@ -108,6 +110,10 @@ function Update-Files
     #>
 }
 
+#endregion Functions 
+
+#region Main
+
 ## Location of files to be checked
 $Src = "F:\"
 
@@ -133,3 +139,5 @@ Set-Content -Path $FilesUpdates -Value (Get-Date).ToString("MM/dd/yyyy HH:mm:ss"
 $UpdatedFiles = Get-ChildItem -Path $Src -Recurse | Where-Object { $_.LastWriteTime -gt $LastUpdate -and $_.Mode -notlike "d*"}
 
 Update-Files $UpdatedFiles $Src $Dst
+
+#endregion Main

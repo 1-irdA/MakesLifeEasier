@@ -1,3 +1,5 @@
+#region Functions
+
 <#
     .SYNOPSIS
     Compare folders, files and update source and destination.
@@ -238,6 +240,10 @@ function Update-IfNeed
     #>
 } 
 
+#endregion Functions
+
+#region Main
+
 # Check if args are correct
 if ($args.Count -eq 2) {
 
@@ -272,3 +278,5 @@ else
 {
 	Write-Host "To execute this script, 2 arguments are required, folder source and folder destination" -ForegroundColor Red
 }
+
+#endregion Main
