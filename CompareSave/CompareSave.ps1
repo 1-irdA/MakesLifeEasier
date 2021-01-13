@@ -252,7 +252,7 @@ if ($args.Count -eq 2) {
 	$Src = "F:\Developpement\$($args[0])"
 	$Dst = "D:\USB\Developpement\$($args[1])"
 
-    ## Check if args are corrects
+    	## Check if args are corrects
 	if ((Test-Path($Src)) -and (Test-Path($Dst)))
 	{
 
@@ -272,6 +272,8 @@ if ($args.Count -eq 2) {
     			$Differences = Compare-SrcDst $SrcFiles $DstFiles
     			Update-Differences $Differences
 		}
+	} else {
+	    Write-Host "Path not exist !" -ForegroundColor Red
 	}
 } 
 else 
