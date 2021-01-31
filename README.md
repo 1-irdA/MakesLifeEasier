@@ -9,4 +9,13 @@ Scripts to help me in my daily life.
 
 ## Documentation  
 • Save script doesn't needs any arguments, replace $Src and $Dst by your path.  
+
+```ps1
+./Save.ps1  
+```
+
 • CompareSave script needs 2 args, source and destination to compare.
+
+```ps1
+./CompareSave.ps1 FolderSrc FolderDst  
+```
