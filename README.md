@@ -2,14 +2,12 @@
 
 Scripts to help me in my daily life.
 
-![Alt text](powershell.png?raw=true "Title")
-
 ## Features  
 
 • Save : Allows you to save all files modified after a date written in "update.txt".  
 • CompareSave : Compares the source and destination tree structure, deletes missing files and backs up present files.  
 • AnalyseLocalFile : Analyses the number of lines and comments (//, /**, /*, */, *) in a local code file.  
-• AnalyseRemoteFile : Analyzes the number of lines and comments in a raw code file.  
+• AnalyseRemoteFile : Analyzes the number of lines and comments (//, /**, /*, */, *) in a raw code file.  
 
 ## Documentation  
 
