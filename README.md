@@ -37,7 +37,7 @@ Scripts to help me in my daily life.
 ## Exemple
 
 ```ps1
-.\AnalyseRemoteFile.ps1 https://raw.githubusercontent.com/1-irdA/BinPacking/main/src/main.cpp 
+.\AnalyseRemoteFile.ps1 "https://raw.githubusercontent.com/1-irdA/BinPacking/main/src/main.cpp" 
 Number of comments : 18 / 75
 Comments ratio : 24%
 ```
