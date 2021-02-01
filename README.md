@@ -1,13 +1,18 @@
 # MakesLifeEasier
+
 Scripts to help me in my daily life.
 
 ![Alt text](powershell.png?raw=true "Title")
 
 ## Features  
+
 • Save : Allows you to save all files modified after a date written in "update.txt".  
-• CompareSave : Compares the source and destination tree structure, deletes missing files and backs up present files.
+• CompareSave : Compares the source and destination tree structure, deletes missing files and backs up present files.  
+• AnalyseLocalFile : Analyses the number of lines and comments (//, /**, /*, */, *) in a local code file.  
+• AnalyseRemoteFile : Analyzes the number of lines and comments in a raw code file.  
 
 ## Documentation  
+
 • Save script doesn't needs any arguments, replace $Src and $Dst by your path.  
 
 ```ps1
@@ -18,4 +23,23 @@ Scripts to help me in my daily life.
 
 ```ps1
 ./CompareSave.ps1 FolderSrc FolderDst  
+```
+
+• AnalyseLocalCodeFile needs 1 arg, the path of file to analyse
+
+```ps1
+./AnalyseLocalFiles.ps1 PathFile 
+```
+
+• AnalyseRemoteCode needs 1 arg, the url of file to analyse
+
+```ps1
+.\AnalyseRemoteFile.ps1 UrlFile
+```
+## Exemple
+
+```ps1
+.\AnalyseRemoteFile.ps1 https://raw.githubusercontent.com/1-irdA/BinPacking/main/src/main.cpp 
+Number of comments : 18 / 75
+Comments ratio : 24%
 ```
