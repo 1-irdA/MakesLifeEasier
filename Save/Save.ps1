@@ -14,19 +14,6 @@
 
 function Get-FolderPath 
 {
-    param(
-        $Src,
-        $Dst,
-        $File
-    )
-
-    $FileFullName = $File.FullName                                                                         
-    $Elts = $FileFullName -split "\\"                                                             
-    $WithoutFileName = $FileFullName.Substring(0, $FileFullName.Length - $Elts[-1].Length)    
-    $DstFolder = $Dst + $WithoutFileName.Substring($Src.Length - 1)  
-
-    return $DstFolder
-
     <#
         .SYNOPSIS
         Returns a path folder.
@@ -43,10 +30,44 @@ function Get-FolderPath
         .OUTPUTS
         System.String. Get-FolderPath returns a string with the folder path.
     #>
+
+    param(
+        $Src,
+        $Dst,
+        $File
+    )
+
+    $FileFullName = $File.FullName                                                                         
+    $Elts = $FileFullName -split "\\"                                                             
+    $WithoutFileName = $FileFullName.Substring(0, $FileFullName.Length - $Elts[-1].Length)    
+    $DstFolder = $Dst + $WithoutFileName.Substring($Src.Length - 1)  
+
+    return $DstFolder
 }
 
 function Update-Files 
 {
+    <#
+        .SYNOPSIS
+        Detecte last modified files and copy them at the specified destination.
+
+        .DESCRIPTION
+        Print all modified files in yellow.
+        Get all modified files after the date saved in the file update.txt.
+        Foreach file, check if folder exist in the save destination, if not,  create it.
+        Then, copy files at the destination. 
+        Created folders and copied files are print in green.
+
+        .PARAMETER ToUpdate
+        Files to save.
+
+        .PARAMETER Src
+        Specifies the source to search file.
+
+        .PARAMETER Dst
+        Specifies the destination to save file.
+    #>
+    
     param(
         $ToUpdate,
         $Src,
@@ -87,27 +108,6 @@ function Update-Files
 
     Write-Host "`nCreated folder(s) : $NbNewFolder"
     Write-Host "Copied file(s) : $NbCopy"
-
-    <#
-        .SYNOPSIS
-        Detecte last modified files and copy them at the specified destination.
-
-        .DESCRIPTION
-        Print all modified files in yellow.
-        Get all modified files after the date saved in the file update.txt.
-        Foreach file, check if folder exist in the save destination, if not,  create it.
-        Then, copy files at the destination. 
-        Created folders and copied files are print in green.
-
-        .PARAMETER ToUpdate
-        Files to save.
-
-        .PARAMETER Src
-        Specifies the source to search file.
-
-        .PARAMETER Dst
-        Specifies the destination to save file.
-    #>
 }
 
 #endregion Functions 

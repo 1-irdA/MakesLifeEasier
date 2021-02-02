@@ -12,12 +12,6 @@
 
 function Get-Files 
 {
-    param(
-        $Path
-    )
-
-    return Get-ChildItem -Path $Path -Recurse
-
     <#
         .SYNOPSIS
         Get files and folders from $Path.
@@ -31,21 +25,16 @@ function Get-Files
         .OUTPUTS
         Array with files.
     #>
+
+    param(
+        $Path
+    )
+
+    return Get-ChildItem -Path $Path -Recurse
 }
 
 function Get-FolderPath 
 {
-    param(
-        $File
-    )
-
-    $FileFullName = $File.FullName                                                                         
-    $Elts = $FileFullName -split "\\"                                                             
-    $WithoutFileName = $FileFullName.Substring(0, $FileFullName.Length - $Elts[-1].Length)     
-    $DstFolder = $global:SaveLocation + $WithoutFileName.Substring($global:Location.Length)  
-
-    return $DstFolder
-
     <#
         .SYNOPSIS
         Transform a file path to a folder path.
@@ -59,26 +48,21 @@ function Get-FolderPath
         .OUTPUTS
         System.String. Folder path.
     #>
+
+    param(
+        $File
+    )
+
+    $FileFullName = $File.FullName                                                                         
+    $Elts = $FileFullName -split "\\"                                                             
+    $WithoutFileName = $FileFullName.Substring(0, $FileFullName.Length - $Elts[-1].Length)     
+    $DstFolder = $global:SaveLocation + $WithoutFileName.Substring($global:Location.Length)  
+
+    return $DstFolder
 }
 
 function Compare-SrcDst 
 {
-    param(
-        $SrcFiles,
-        $DstFiles
-    )
-
-    $files = $null
-
-    if ($SrcFiles.Count -gt 0 -and $DstFiles.Count -gt 0) 
-    {
-        ## <= In $src but differents in $save
-        ## => In $save but differents in $sr
-        $files = Compare-Object -ReferenceObject $SrcFiles -DifferenceObject $DstFiles -Property FullName, SideIndicator, LastWriteTime
-    }
-
-    return $files
-
     <#
         .SYNOPSIS
         Compare two arrays of files.
@@ -95,18 +79,26 @@ function Compare-SrcDst
         .OUTPUTS
         [Array] of files with differences, full name and side indicator.
     #>
+
+    param(
+        $SrcFiles,
+        $DstFiles
+    )
+
+    $files = $null
+
+    if ($SrcFiles.Count -gt 0 -and $DstFiles.Count -gt 0) 
+    {
+        ## <= In $src but differents in $save
+        ## => In $save but differents in $sr
+        $files = Compare-Object -ReferenceObject $SrcFiles -DifferenceObject $DstFiles -Property FullName, SideIndicator, LastWriteTime
+    }
+
+    return $files
 }
 
 function Get-BuildPath 
 {
-    param(
-        $File,
-        $Src,
-        $Dst
-    )
-
-    return $Dst + ($File.FullName).Substring($Src.Length, ($File.FullName).Length - $Src.Length)
-
     <#
         .SYNOPSIS
         Create a path.
@@ -126,10 +118,29 @@ function Get-BuildPath
         .OUTPUTS
         System.String. A new path.
     #>
+
+    param(
+        $File,
+        $Src,
+        $Dst
+    )
+
+    return $Dst + ($File.FullName).Substring($Src.Length, ($File.FullName).Length - $Src.Length)
 }
 
 function Update-Differences 
 {
+    <#
+        .SYNOPSIS
+        Update all differences.
+
+        .DESCRIPTION
+        Check from differences if folder exist, if file exist and update them.
+
+        .PARAMETER Differences
+        An array with files.
+    #>
+
     param(
         $Differences
     )
@@ -183,21 +194,26 @@ function Update-Differences
             }  
         } 
     }
-
-    <#
-        .SYNOPSIS
-        Update all differences.
-
-        .DESCRIPTION
-        Check from differences if folder exist, if file exist and update them.
-
-        .PARAMETER Differences
-        An array with files.
-    #>
 }
 
 function Update-IfNeed 
 {
+    <#
+        .SYNOPSIS
+        Fill the corresponding folder in the destination with the source folder,
+        if destination folder is empty.
+
+        .DESCRIPTION
+        Fill the corresponding folder in the destination with the source folder,
+        if destination folder is empty.
+
+        .PARAMETER Src
+        Source folder.
+
+        .PARAMETER Dst
+        Destination folder.
+    #>
+    
     param(
         $Src,
         $Dst
@@ -222,22 +238,6 @@ function Update-IfNeed
         Copy-Item $File.FullName -Destination $FileDst 
         Write-Host "Copied file : $FileDst" -ForegroundColor Green
     }
-
-       <#
-        .SYNOPSIS
-        Fill the corresponding folder in the destination with the source folder,
-        if destination folder is empty.
-
-        .DESCRIPTION
-        Fill the corresponding folder in the destination with the source folder,
-        if destination folder is empty.
-
-        .PARAMETER Src
-        Source folder.
-
-        .PARAMETER Dst
-        Destination folder.
-    #>
 } 
 
 #endregion Functions
