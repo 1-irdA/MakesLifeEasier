@@ -6,8 +6,8 @@ Scripts to help me in my daily life.
 
 • Save : Allows you to save all files modified after a date written in "update.txt".  
 • CompareSave : Compares the source and destination tree structure, deletes missing files and backs up present files.  
-• AnalyseLocalFile : Analyses the number of lines and comments (//, /**, /*, */, *) in a local code file.  
-• AnalyseRemoteFile : Analyzes the number of lines and comments (//, /**, /*, */, *) in a raw code file.  
+• AnalyseLocalFile : Analyses the number of lines and comments (Java, C, C#, C++, ...) in a local code file.  
+• AnalyseRemoteFile : Analyzes the number of lines and comments (Java, C, C#, C++, ...) in a raw code file.  
 • SelfStorage : Store all file who corresponds with extensions in folder (ex: exemple.c => Moved in folder named 'C').
 
 ## Documentation  
