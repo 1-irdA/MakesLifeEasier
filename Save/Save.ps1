@@ -114,30 +114,35 @@ function Update-Files
 
 #region Main
 
-## Location of files to be checked
-$Src = "F:\"
+if ($args.Count -eq 2) {
 
-## Location of files to be saved
-$Dst = "D:\USB"
+    ## Location of files to be checked
+    $Src = $args[0]
 
-## File where backup date is written
-$FilesUpdates = (Get-Location).Path + "\update.txt"
+    ## Location of files to be saved
+    $Dst = $args[1]
 
-if (Test-Path $FilesUpdates) 
-{
-    $LastUpdate = Get-Content $FilesUpdates
+    ## File where backup date is written
+    $FilesUpdates = (Get-Location).Path + "\update.txt"
+
+    if (Test-Path $FilesUpdates) 
+    {
+        $LastUpdate = Get-Content $FilesUpdates
+    }
+    else
+    {
+        $LastUpdate = (Get-Date).AddDays(-1)
+    }
+
+    ## Update file with last update
+    Set-Content -Path $FilesUpdates -Value (Get-Date).ToString("MM/dd/yyyy HH:mm:ss")
+
+    ## Get all files where the modification date is greater than the last date in update.txt
+    $UpdatedFiles = Get-ChildItem -Path $Src -Recurse | Where-Object { $_.LastWriteTime -gt $LastUpdate -and $_.Mode -notlike "d*"}
+
+    Update-Files $UpdatedFiles $Src $Dst
+} else {
+    Write-Host "To execute this script, 2 arguments are required, folder source and folder destination" -ForegroundColor Red
 }
-else
-{
-    $LastUpdate = (Get-Date).AddDays(-1)
-}
-
-## Update file with last update
-Set-Content -Path $FilesUpdates -Value (Get-Date).ToString("MM/dd/yyyy HH:mm:ss")
-
-## Get all files where the modification date is greater than the last date in update.txt
-$UpdatedFiles = Get-ChildItem -Path $Src -Recurse | Where-Object { $_.LastWriteTime -gt $LastUpdate -and $_.Mode -notlike "d*"}
-
-Update-Files $UpdatedFiles $Src $Dst
 
 #endregion Main
